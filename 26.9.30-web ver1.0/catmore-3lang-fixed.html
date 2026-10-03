@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CatMore · 从空气中，创造水 | Making Water from Air</title>
+<meta name="description" content="CatMore 空气取水：超级海绵材料 × 热交换 e-Transfer × super supply 能量管理，把空气中的水变成全天候安全饮用水。/ CatMore turns atmospheric vapor into safe, all-weather drinking water.">
+<link rel="icon" href="catmore-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --ink:#0A1626; --ink-2:#0E1F38; --ink-3:#13294A;
+  --paper:#F6F4EF; --paper-2:#EFECE4;
+  --water:#1B6FE0; --water-l:#4E9BFF; --aqua:#2BC5C8; --gold:#C4A468;
+  --line:rgba(10,22,38,.14); --line-l:rgba(246,244,239,.16);
+  --serif:"Fraunces","Noto Serif SC",serif;
+  --sans:"Inter","Noto Sans SC",system-ui,sans-serif;
+  --ease:cubic-bezier(.22,.9,.28,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;font-weight:300;font-size:16px}
+::selection{background:var(--water);color:#fff}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+.container{width:min(1320px,92vw);margin:0 auto}
+section{scroll-margin-top:80px}
+
+/* ============ NAV ============ */
+.nav{position:fixed;inset:0 0 auto 0;z-index:100;transition:all .5s var(--ease)}
+.nav-inner{width:min(1400px,94vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:26px 0;transition:padding .5s var(--ease)}
+.nav.scrolled{background:rgba(10,22,38,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 0 var(--line-l)}
+.nav.scrolled .nav-inner{padding:16px 0}
+/* [修改] logo和标语改为上下排列 */
+.brand{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--serif);letter-spacing:.14em;font-weight:500;color:var(--paper)}
+/* CatMore Logo（深色背景专用浅色版） */
+.brand .mark{height:30px;width:auto;flex:none;transition:opacity .3s}
+.brand:hover .mark{opacity:.85}
+/* [修改] 移除 margin-top，由父级 gap 控制间距 */
+.brand small{font-family:var(--sans);font-size:11px;letter-spacing:.32em;opacity:.6;display:block;font-weight:400}
+.nav-links{display:flex;gap:38px;font-size:15px;letter-spacing:.1em;font-weight:400;color:var(--paper)}
+.nav-links a{position:relative;padding:4px 0;opacity:.82;transition:opacity .3s}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-3px;width:100%;height:1px;background:var(--aqua);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.nav-links a:hover,.nav-links a.active{opacity:1}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:26px}
+/* 语言切换 */
+.lang-sw{display:flex;align-items:center;gap:9px;font-size:13px;letter-spacing:.08em;color:var(--paper)}
+.lang-sw button{background:none;border:0;color:rgba(246,244,239,.55);cursor:pointer;font:inherit;font-size:13px;letter-spacing:.08em;padding:4px 2px;transition:color .3s}
+.lang-sw button:hover{color:var(--paper)}
+.lang-sw button.on{color:var(--aqua);font-weight:500}
+.lang-sw .sep{opacity:.35}
+.nav-cta{font-size:14px;letter-spacing:.14em;padding:12px 28px;border:1px solid rgba(246,244,239,.45);border-radius:999px;color:var(--paper);transition:all .35s var(--ease);font-weight:400}
+.nav-cta:hover{background:var(--water);border-color:var(--water);color:#fff}
+.burger{display:none;flex-direction:column;gap:6px;background:none;border:0;cursor:pointer;padding:8px}
+.burger span{width:26px;height:1.5px;background:var(--paper);transition:.3s}
+@media(max-width:960px){.nav-links,.nav-cta{display:none}.burger{display:flex}}
+.m-menu{position:fixed;inset:0;background:var(--ink);color:var(--paper);z-index:99;display:flex;flex-direction:column;justify-content:center;padding:0 8vw;gap:6px;clip-path:inset(0 0 100% 0);transition:clip-path .6s var(--ease)}
+.m-menu.open{clip-path:inset(0 0 0 0)}
+.m-menu a{font-family:var(--serif);font-size:clamp(30px,7vw,44px);padding:14px 0;border-bottom:1px solid var(--line-l);display:flex;justify-content:space-between;align-items:baseline}
+.m-menu a i{font-style:normal;font-family:var(--sans);font-size:12px;letter-spacing:.3em;opacity:.5}
+.m-lang{display:flex;gap:18px;padding-top:22px;font-size:16px;letter-spacing:.1em}
+.m-lang button{background:none;border:1px solid var(--line-l);border-radius:999px;color:rgba(246,244,239,.7);padding:10px 26px;font:inherit;cursor:pointer}
+.m-lang button.on{color:var(--aqua);border-color:var(--aqua)}
+
+/* ============ HERO ============ */
+.hero{position:relative;min-height:100vh;background:var(--ink);color:var(--paper);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(900px 520px at 50% 34%,rgba(27,111,224,.20),transparent 62%),radial-gradient(700px 500px at 12% 90%,rgba(43,197,200,.10),transparent 60%),radial-gradient(700px 500px at 88% 90%,rgba(78,155,255,.08),transparent 60%)}
+.hero-main{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:150px 5vw 40px}
+.hero-logo{position:relative;width:clamp(120px,15vw,170px);height:clamp(120px,15vw,170px);display:grid;place-items:center;margin-bottom:34px}
+.hero-logo .halo{position:absolute;inset:-34%;border-radius:50%;background:radial-gradient(closest-side,rgba(78,155,255,.28),transparent 72%);animation:breathe 4.5s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.12);opacity:1}}
+.hero-logo .ring{position:absolute;inset:-8%;border-radius:50%;border:1px solid rgba(78,155,255,.35);animation:spin 22s linear infinite}
+.hero-logo .ring::before{content:"";position:absolute;top:-4px;left:50%;width:7px;height:7px;border-radius:50%;background:var(--aqua);box-shadow:0 0 12px var(--aqua)}
+.hero-logo .ring.r2{inset:-19%;border-color:rgba(43,197,200,.22);animation-duration:34s;animation-direction:reverse}
+.hero-logo .ring.r2::before{background:var(--water-l);box-shadow:0 0 12px var(--water-l);width:5px;height:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-logo .drop{width:58%;filter:drop-shadow(0 10px 34px rgba(27,111,224,.55));animation:float 5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.hero-brand{font-family:var(--serif);font-weight:500;font-size:clamp(34px,4.6vw,56px);letter-spacing:.22em;margin-bottom:8px}
+.hero-brand-en{font-size:13px;letter-spacing:.6em;color:rgba(246,244,239,.5);margin-bottom:44px;font-weight:400}
+.hero h1{font-family:"Noto Serif SC",var(--serif);font-weight:300;font-size:clamp(40px,6.4vw,92px);line-height:1.1}
+.hero h1 em{font-style:italic;color:var(--water-l);font-weight:400}
+.hero-motto{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(20px,2.3vw,30px);color:var(--gold);letter-spacing:.22em;margin-top:26px}
+.hero-motto::before,.hero-motto::after{content:"—";margin:0 18px;opacity:.5;font-style:normal}
+.hero-sub{max-width:680px;margin-top:32px;font-size:16.5px;line-height:2.1;color:rgba(246,244,239,.75)}
+.hero-sub b{color:var(--aqua);font-weight:500}
+.hero-actions{display:flex;gap:18px;margin-top:42px;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:12px;font-size:14.5px;letter-spacing:.16em;font-weight:400;padding:18px 40px;border-radius:999px;transition:all .4s var(--ease);cursor:pointer;border:1px solid transparent}
+.btn-solid{background:var(--water);color:#fff}
+.btn-solid:hover{background:var(--water-l);transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(27,111,224,.55)}
+.btn-ghost{border-color:rgba(246,244,239,.35);color:var(--paper)}
+.btn-ghost:hover{border-color:var(--paper);background:rgba(246,244,239,.06)}
+.hero-stats{position:relative;z-index:2;border-top:1px solid var(--line-l);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(10,22,38,.35);backdrop-filter:blur(8px)}
+.hstat{padding:30px 32px 40px;border-right:1px solid var(--line-l);text-align:center}
+.hstat:last-child{border-right:0}
+.hstat b{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.2vw,44px);display:flex;align-items:baseline;justify-content:center;gap:5px}
+.hstat b i{font-style:normal;font-size:.45em;color:var(--aqua)}
+.hstat span{display:block;margin-top:10px;font-size:13px;letter-spacing:.16em;color:rgba(246,244,239,.6)}
+@media(max-width:900px){.hero-stats{grid-template-columns:1fr 1fr}.hstat:nth-child(2){border-right:0}.hstat{padding:24px 16px 30px}}
+
+/* ============ MARQUEE ============ */
+.marquee{background:var(--paper);border-bottom:1px solid var(--line);overflow:hidden;padding:22px 0}
+.marquee-track{display:flex;width:max-content;animation:mq 26s linear infinite}
+.marquee-track span{display:flex;align-items:center;gap:64px;padding-right:64px;font-family:var(--serif);font-size:17px;letter-spacing:.14em;color:rgba(10,22,38,.65);white-space:nowrap}
+.marquee-track em{font-style:normal;color:var(--gold);font-size:11px}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ============ SECTION COMMON ============ */
+.sec{padding:clamp(96px,12vh,156px) 0}
+.sec-head{display:grid;grid-template-columns:auto 1fr;gap:24px 60px;align-items:end;margin-bottom:clamp(52px,7vh,84px)}
+.sec-no{font-family:var(--serif);font-size:16px;color:var(--gold);letter-spacing:.1em;padding-bottom:10px}
+.sec-title{font-family:"Noto Serif SC",var(--serif);font-weight:300;font-size:clamp(36px,4.8vw,64px);line-height:1.16}
+.sec-title em{font-style:italic;color:var(--water)}
+.sec-lead{max-width:560px;justify-self:end;font-size:16px;line-height:2;color:rgba(10,22,38,.65);padding-bottom:10px}
+@media(max-width:900px){.sec-head{grid-template-columns:1fr}.sec-lead{justify-self:start}}
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}
+
+/* ============ 应用场景 ============ */
+.scenes{background:var(--paper)}
+.scene-row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
+.scene{padding:44px 32px 52px;border-right:1px solid var(--line);position:relative;overflow:hidden;transition:background .45s var(--ease),color .45s var(--ease);cursor:pointer}
+.scene:last-child{border-right:0}
+.scene-no{font-family:var(--serif);font-size:14px;color:var(--gold);letter-spacing:.1em;transition:color .45s}
+.scene svg{width:38px;height:38px;margin:46px 0 22px;color:var(--water);transition:color .45s}
+.scene h3{font-family:"Noto Serif SC",var(--serif);font-weight:400;font-size:23px;margin-bottom:16px}
+.scene p{font-size:14.5px;line-height:1.95;color:rgba(10,22,38,.6);transition:color .45s}
+.scene::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:3px;background:var(--water);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.scene:hover{background:var(--ink);color:var(--paper)}
+.scene:hover p{color:rgba(246,244,239,.65)}
+.scene:hover svg{color:var(--aqua)}
+.scene:hover::after{transform:scaleX(1)}
+@media(max-width:900px){.scene-row{grid-template-columns:1fr 1fr}.scene:nth-child(2){border-right:0}.scene{border-bottom:1px solid var(--line)}}
+
+/* ============ 关于我们 ============ */
+.about{background:var(--paper-2)}
+.about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(44px,6vw,90px);align-items:start}
+.about-big{font-family:"Noto Serif SC",var(--serif);font-weight:300;font-size:clamp(25px,2.8vw,38px);line-height:1.8}
+.about-big b{font-weight:500;color:var(--water)}
+.about-copy p{font-size:16px;line-height:2.15;color:rgba(10,22,38,.68);margin-bottom:24px}
+.sig{display:flex;align-items:center;gap:18px;margin-top:36px;font-size:13px;letter-spacing:.26em;color:rgba(10,22,38,.55)}
+.sig::before{content:"";width:64px;height:1px;background:var(--gold)}
+.video-card{margin-top:44px;position:relative;border-radius:4px;overflow:hidden;cursor:pointer;aspect-ratio:16/9;background:var(--ink);box-shadow:0 30px 60px -30px rgba(10,22,38,.4);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.video-card:hover{transform:translateY(-4px);box-shadow:0 40px 80px -32px rgba(27,111,224,.45)}
+.video-card .v-bg{position:absolute;inset:0;background:radial-gradient(600px 340px at 50% 110%,rgba(27,111,224,.4),transparent 65%),linear-gradient(150deg,#0E1F38,#0A1626)}
+.video-card .v-waves{position:absolute;inset:auto 0 0 0;opacity:.8;width:100%;height:46%}
+.video-card .v-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:var(--paper)}
+.play-btn{width:82px;height:82px;border-radius:50%;border:1px solid rgba(246,244,239,.4);display:grid;place-items:center;background:rgba(10,22,38,.35);backdrop-filter:blur(6px);transition:all .4s var(--ease)}
+.video-card:hover .play-btn{background:var(--water);border-color:var(--water);transform:scale(1.08)}
+.v-center span{font-size:13px;letter-spacing:.3em;color:rgba(246,244,239,.7)}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+
+/* video modal */
+.v-modal{position:fixed;inset:0;z-index:200;background:rgba(6,14,27,.92);backdrop-filter:blur(10px);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.v-modal.open{opacity:1;pointer-events:auto}
+.v-box{width:min(960px,92vw)}
+.v-frame{aspect-ratio:16/9;background:#000;border-radius:4px;overflow:hidden;display:grid;place-items:center;color:rgba(246,244,239,.55);font-size:14px;letter-spacing:.08em}
+.v-frame iframe{width:100%;height:100%;border:0}
+.v-close{margin:18px auto 0;display:block;background:none;border:1px solid rgba(246,244,239,.4);color:var(--paper);padding:11px 32px;border-radius:999px;letter-spacing:.2em;font-size:13px;cursor:pointer;transition:.3s}
+.v-close:hover{background:var(--water);border-color:var(--water)}
+
+/* ============ 核心技术 ============ */
+.tech{background:var(--ink);color:var(--paper)}
+.tech .sec-lead{color:rgba(246,244,239,.65)}
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--line-l)}
+.tech-card{border-right:1px solid var(--line-l);border-top:1px solid var(--line-l);padding:clamp(34px,3.4vw,54px);position:relative;overflow:hidden;transition:background .5s var(--ease);min-height:440px;display:flex;flex-direction:column}
+.tech-card::before{content:"";position:absolute;inset:auto -30% -60% -30%;height:70%;background:radial-gradient(closest-side,rgba(27,111,224,.32),transparent);opacity:0;transition:opacity .6s}
+.tech-card:hover::before{opacity:1}
+.tech-card:hover{background:rgba(27,111,224,.05)}
+.tech-num{font-family:var(--serif);font-size:16px;color:var(--gold);letter-spacing:.08em}
+.tech-icon{width:58px;height:58px;margin:34px 0 26px;color:var(--aqua)}
+.tech-card h3{font-family:"Noto Serif SC",var(--serif);font-weight:400;font-size:25px;margin-bottom:8px}
+.tech-card h4{font-family:var(--serif);font-style:italic;font-weight:300;font-size:15.5px;color:rgba(246,244,239,.5);margin-bottom:24px;letter-spacing:.05em}
+.tech-card p{font-size:15.5px;line-height:2.05;color:rgba(246,244,239,.68);flex:1}
+.tech-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.tech-tags span{font-size:12.5px;letter-spacing:.12em;padding:8px 16px;border:1px solid var(--line-l);border-radius:999px;color:rgba(246,244,239,.6)}
+@media(max-width:900px){.tech-grid{grid-template-columns:1fr;border-left:0}.tech-card{border-right:0;min-height:0}}
+
+/* ============ 联系我们 ============ */
+.contact{background:var(--paper)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(44px,5vw,84px);align-items:start}
+.c-info h3{font-family:"Noto Serif SC",var(--serif);font-weight:400;font-size:clamp(28px,3.2vw,40px);line-height:1.45;margin-bottom:20px}
+.c-info h3 em{font-style:italic;color:var(--water)}
+.c-info>p{font-size:15.5px;line-height:2.05;color:rgba(10,22,38,.65);max-width:440px;margin-bottom:42px}
+.c-item{display:flex;gap:20px;padding:22px 0;border-top:1px solid var(--line);align-items:flex-start}
+.c-item svg{width:22px;height:22px;color:var(--water);flex:none;margin-top:4px}
+.c-item b{display:block;font-size:12px;letter-spacing:.26em;color:rgba(10,22,38,.48);font-weight:400;margin-bottom:7px}
+.c-item span{font-size:16px;line-height:1.8}
+.c-form{background:#fff;border:1px solid var(--line);border-radius:4px;padding:clamp(34px,3.6vw,56px);box-shadow:0 30px 70px -40px rgba(10,22,38,.35)}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.f-field{margin-bottom:26px}
+.f-field label{display:block;font-size:12.5px;letter-spacing:.22em;color:rgba(10,22,38,.55);margin-bottom:11px;font-weight:400}
+.f-field input,.f-field textarea{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);padding:11px 2px;font-size:16.5px;font-family:var(--sans);color:var(--ink);outline:none;transition:border-color .3s;resize:vertical}
+.f-field input:focus,.f-field textarea:focus{border-color:var(--water)}
+.f-field.err input,.f-field.err textarea{border-color:#D9534F}
+.f-hint{font-size:12.5px;color:#D9534F;margin-top:7px;display:none}
+.f-field.err .f-hint{display:block}
+.f-submit{width:100%;margin-top:10px;border:0;justify-content:center}
+.f-ok{display:none;text-align:center;padding:48px 10px}
+.f-ok.show{display:block;animation:pop .5s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.f-ok .ok-ring{width:76px;height:76px;border-radius:50%;border:1.5px solid var(--aqua);display:grid;place-items:center;margin:0 auto 24px;color:var(--aqua)}
+.f-ok h4{font-family:"Noto Serif SC",var(--serif);font-weight:400;font-size:24px;margin-bottom:12px}
+.f-ok p{font-size:14.5px;color:rgba(10,22,38,.6);line-height:2}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr}.f-row{grid-template-columns:1fr}}
+
+/* ============ FOOTER ============ */
+footer{background:#060E1B;color:rgba(246,244,239,.6);padding:70px 0 40px;font-size:14px}
+.foot-top{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;padding-bottom:38px;border-bottom:1px solid var(--line-l)}
+/* CatMore Logo 替换原 图标+文字 */
+.foot-brand{display:flex;align-items:center;gap:12px}
+.foot-brand img{height:32px;width:auto}
+.foot-links{display:flex;gap:34px;font-size:13.5px;letter-spacing:.12em}
+.foot-links a:hover{color:var(--water-l)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:30px;letter-spacing:.05em}
+
+/* ============ FLOAT ============ */
+.top-btn{position:fixed;right:26px;bottom:26px;z-index:80;width:50px;height:50px;border-radius:50%;background:var(--water);color:#fff;border:0;cursor:pointer;display:grid;place-items:center;opacity:0;pointer-events:none;transition:all .4s var(--ease);box-shadow:0 12px 30px -10px rgba(27,111,224,.6)}
+.top-btn.show{opacity:1;pointer-events:auto}
+.top-btn:hover{transform:translateY(-4px)}
+
+/* ============ RTL ARABIC SUPPORT ============ */
+html[dir="rtl"] body {
+  font-family: 'Noto Sans Arabic', var(--sans);
+  line-height: 1.85;
+  letter-spacing: 0;
+}
+html[dir="rtl"] .nav-links a::after {
+  left: auto;
+  right: 0;
+  transform-origin: left;
+}
+html[dir="rtl"] .nav-links a:hover::after,
+html[dir="rtl"] .nav-links a.active::after {
+  transform-origin: right;
+  transform: scaleX(1);
+}
+html[dir="rtl"] .scene { border-right: none; border-left: 1px solid var(--line); }
+html[dir="rtl"] .scene:last-child { border-left: 0; }
+html[dir="rtl"] .scene::after { left: auto; right: 0; transform-origin: right; }
+html[dir="rtl"] .scene:hover::after { transform-origin: left; }
+html[dir="rtl"] .tech-grid { border-left: none; border-right: 1px solid var(--line-l); }
+html[dir="rtl"] .tech-card { border-right: none; border-left: 1px solid var(--line-l); }
+html[dir="rtl"] .c-item { flex-direction: row-reverse; }
+html[dir="rtl"] .c-item svg { margin: 4px 20px 0 0; }
+html[dir="rtl"] .f-field input,
+html[dir="rtl"] .f-field textarea { text-align: right; }
+html[dir="rtl"] .hero-stats .hstat { border-right: none; border-left: 1px solid var(--line-l); }
+html[dir="rtl"] .hero-stats .hstat:last-child { border-left: 0; }
+html[dir="rtl"] .top-btn { right: auto; left: 26px; }
+html[dir="rtl"] .marquee-track span { padding-right: 0; padding-left: 64px; }
+html[dir="rtl"] .sec-head { direction: rtl; }
+html[dir="rtl"] .sec-lead { justify-self: start; }
+html[dir="rtl"] .contact-grid { direction: rtl; }
+html[dir="rtl"] .about-grid { direction: rtl; }
+html[dir="rtl"] .foot-top { direction: rtl; }
+html[dir="rtl"] .foot-bottom { direction: rtl; }
+html[dir="rtl"] .nav-right { direction: rtl; }
+html[dir="rtl"] .lang-sw { direction: ltr; }
+html[dir="rtl"] .m-menu a { direction: rtl; justify-content: flex-start; }
+html[dir="rtl"] .m-lang { direction: ltr; }
+html[dir="rtl"] .brand { direction: rtl; }
+html[dir="rtl"] .nav-links { direction: rtl; }
+html[dir="rtl"] .btn { direction: ltr; }
+html[dir="rtl"] .hero-actions { direction: ltr; }
+html[dir="rtl"] .tech-card { direction: rtl; }
+html[dir="rtl"] .scene { direction: rtl; }
+html[dir="rtl"] .video-card { direction: rtl; }
+html[dir="rtl"] .c-form { direction: rtl; }
+html[dir="rtl"] .f-row { direction: rtl; }
+html[dir="rtl"] .f-field { direction: rtl; }
+html[dir="rtl"] .f-submit { direction: ltr; }
+/* LTR isolation for phone/email/numbers */
+html[dir="rtl"] .ltr-isolate { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#home">
+      <img class="mark" src="catmore-logo-light.png" alt="CatMore">
+      <span><small data-i18n="brand.tag">承天上水 · 哲润世界</small></span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#home" class="active" data-i18n="nav.home">首页</a>
+      <a href="#scenes" data-i18n="nav.scenes">应用场景</a>
+      <a href="#about" data-i18n="nav.about">关于我们</a>
+      <a href="#tech" data-i18n="nav.tech">核心技术</a>
+      <a href="#contact" data-i18n="nav.contact">联系我们</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-sw" role="group" aria-label="Language / 语言">
+        <button data-lang="zh" class="on">中</button><span class="sep">/</span><button data-lang="en">EN</button><span class="sep">/</span><button data-lang="ar">عربي</button>
+      </div>
+      <a class="nav-cta" href="#contact" data-i18n="nav.cta">预约演示</a>
+      <button class="burger" id="burger" aria-label="菜单"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="m-menu" id="mMenu">
+  <a href="#home"><span data-i18n="nav.home">首页</span><i data-i18n="nav.home_en">HOME</i></a>
+  <a href="#scenes"><span data-i18n="nav.scenes">应用场景</span><i data-i18n="nav.scenes_en">SCENES</i></a>
+  <a href="#about"><span data-i18n="nav.about">关于我们</span><i data-i18n="nav.about_en">ABOUT</i></a>
+  <a href="#tech"><span data-i18n="nav.tech">核心技术</span><i data-i18n="nav.tech_en">TECH</i></a>
+  <a href="#contact"><span data-i18n="nav.contact">联系我们</span><i data-i18n="nav.contact_en">CONTACT</i></a>
+  <div class="m-lang">
+    <button data-lang="zh" class="on">中文</button><button data-lang="en">English</button><button data-lang="ar">العربية</button>
+  </div>
+</div>
+
+<!-- ================= 板块1 · 首页 ================= -->
+<header class="hero" id="home">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-glow"></div>
+  <div class="hero-main">
+    <div class="hero-logo rv in">
+      <div class="halo"></div>
+      <div class="ring"></div>
+      <div class="ring r2"></div>
+      <svg class="drop" viewBox="0 0 40 40" fill="none">
+        <path d="M20 3C20 3 7 16.5 7 24a13 13 0 0 0 26 0C33 16.5 20 3 20 3Z" fill="url(#lg2)" fill-opacity=".18" stroke="url(#lg2)" stroke-width="1.6"/>
+        <path d="M14 25a6 6 0 0 0 6 6" stroke="#2BC5C8" stroke-width="1.8" stroke-linecap="round"/>
+        <defs><linearGradient id="lg2" x1="7" y1="3" x2="33" y2="37"><stop stop-color="#4E9BFF"/><stop offset="1" stop-color="#2BC5C8"/></linearGradient></defs>
+      </svg>
+    </div>
+    <div class="hero-brand">CatMore</div>
+    <div class="hero-brand-en">A T M O S P H E R I C &nbsp; W A T E R</div>
+    <h1 data-i18n="hero.h1">从空气中，<em>创造水</em></h1>
+    <div class="hero-motto" data-i18n="hero.motto">承天上水，哲润世界</div>
+    <p class="hero-sub" data-i18n="hero.sub">全球约 <b>60% 以上</b>人口面临缺水，CatMore 自研<b>超级海绵材料</b>、<b>热交换 e-Transfer 技术</b>、<b>super supply 能量管理系统</b>三大技术路径，把空气中看不见的水气变成全天候安全饮用水。</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="#tech"><span data-i18n="hero.btn1">了解核心技术</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 12h15m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="#contact" data-i18n="hero.btn2">联系我们</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><b><span class="count" data-to="60">0</span><i data-i18n="stat1.u">%+</i></b><span data-i18n="stat1">全球人口面临缺水</span></div>
+    <div class="hstat"><b><span class="count" data-to="13.9" data-dec="1">0</span><i data-i18n="stat2.u">万亿m³</i></b><span data-i18n="stat2">大气「隐形水库」</span></div>
+    <div class="hstat"><b><span class="count" data-to="10">0</span><i>%RH</i></b><span data-i18n="stat3">极限干燥工况仍可产水</span></div>
+    <div class="hstat"><b><span class="count" data-to="40">0</span><i data-i18n="stat4.u">%+</i></b><span data-i18n="stat4">单位能耗较传统方案降低</span></div>
+  </div>
+</header>
+
+<!-- 关键词滚动带 -->
+<div class="marquee"><div class="marquee-track" id="mqTrack"></div></div>
+
+<!-- ================= 板块2 · 应用场景 ================= -->
+<section class="sec scenes" id="scenes">
+  <div class="container">
+    <div class="sec-head rv">
+      <div class="sec-no"><span data-i18n="sec.scenarios_display">02 / SCENARIOS</span></div>
+      <h2 class="sec-title" data-i18n="scenes.title">水可以出现在，<br>任何<em>需要它的地方</em>。</h2>
+      <p class="sec-lead" data-i18n="scenes.lead">从都市家庭到荒漠戈壁，从海岛哨所到救灾现场——CatMore 让净水突破地理边界。</p>
+    </div>
+    <div class="scene-row rv">
+      <div class="scene">
+        <div class="scene-no" data-i18n="scene.no1">A—01</div>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 11 12 4l9 7M6 10v9h12v-9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3 data-i18n="s1.h">家庭与办公</h3>
+        <p data-i18n="s1.p">免水源、全净水，全天提供生活净水。</p>
+      </div>
+      <div class="scene">
+        <div class="scene-no" data-i18n="scene.no2">A—02</div>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M12 6l6 3M12 6 6 9M5 21h14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="14" r="2.4" stroke="currentColor" stroke-width="1.4"/></svg>
+        <h3 data-i18n="s2.h">应急与救灾</h3>
+        <p data-i18n="s2.p">灾害中断供水时快速部署移动制水单元，为救援现场提供全天候安全饮水。</p>
+      </div>
+      <div class="scene">
+        <div class="scene-no" data-i18n="scene.no3">A—03</div>
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4"/><path d="M3 12h18M12 3c3 2.6 3 15.4 0 18-3-2.6-3-15.4 0-18Z" stroke="currentColor" stroke-width="1.4"/></svg>
+        <h3 data-i18n="s3.h">海岛与边防</h3>
+        <p data-i18n="s3.p">告别海运淡水高成本与不确定性，super supply 能量系统支持完全离网运行。</p>
+      </div>
+      <div class="scene">
+        <div class="scene-no" data-i18n="scene.no4">A—04</div>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 21V11M12 11c0-4 3-7 8-7 0 4-3 7-8 7ZM12 14c0-3-2.5-5-6-5 0 3 2.5 5 6 5Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3 data-i18n="s4.h">农业与工业</h3>
+        <p data-i18n="s4.p">为干旱区灌溉与工业用水提供分布式补充水源，助力水资源高效利用。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 板块3 · 关于我们 ================= -->
+<section class="sec about" id="about">
+  <div class="container">
+    <div class="sec-head rv">
+      <div class="sec-no">03 / ABOUT</div>
+      <h2 class="sec-title" data-i18n="about.title">把空气变成水，<br>把不可能变成<em>日常</em>。</h2>
+      <p class="sec-lead" data-i18n="about.lead">CatMore 是一家专注于干旱离网供水、助力水资源高效利用的科技公司——把空气中看不见的水蒸气，变成全天候安全饮用水。</p>
+    </div>
+    <div class="about-grid">
+      <div>
+        <div class="about-big rv" data-i18n="about.big">地球上约 <b>13.9 万亿立方米</b> 的水以气态悬浮于大气之中，大气是地球上最大的<b>「隐形水库」</b>。我们要做的，是将其取出，进行<b>「高效配置」</b>。</div>
+        <div class="video-card rv rv-d1" id="videoCard" role="button">
+          <div class="v-bg"></div>
+          <svg class="v-waves" viewBox="0 0 600 120" preserveAspectRatio="none">
+            <path d="M0 70 Q75 40 150 70 T300 70 T450 70 T600 70 V120 H0 Z" fill="rgba(78,155,255,.10)"/>
+            <path d="M0 88 Q75 60 150 88 T300 88 T450 88 T600 88 V120 H0 Z" fill="rgba(43,197,200,.12)"/>
+          </svg>
+          <div class="v-center">
+            <div class="play-btn">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor"/></svg>
+            </div>
+            <span data-i18n="about.video">观看 CatMore 离网制水</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-copy">
+        <p class="rv rv-d1" data-i18n="about.p1">从实验室的第一克水，到千家万户与应急现场的第一杯水，CatMore 正以材料科学、热科学与精密制造的交叉创新，重新定义「水的来源」。</p>
+        <p class="rv rv-d2" data-i18n="about.p2">CatMore 是由国际顶尖科技团队孵化的硬科技公司，专注空气取水（Atmospheric Water Harvesting）技术的产业化。我们首次完整提出覆盖高温高湿、中温低湿、高温干旱等全域气候的技术解决方案。</p>
+        <div class="sig rv rv-d3" data-i18n="sig.text">MAKE EVERY AIR BREATHABLE WATER</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 板块4 · 核心技术 ================= -->
+<section class="sec tech" id="tech">
+  <div class="container">
+    <div class="sec-head rv">
+      <div class="sec-no"><span data-i18n="sec.tech_display">04 / TECHNOLOGY</span></div>
+      <h2 class="sec-title" style="color:var(--paper)" data-i18n="tech.title">三大核心技术，<br>重新定义<em style="color:var(--aqua)">水的来源</em>。</h2>
+      <p class="sec-lead" data-i18n="tech.lead">材料、热科学与能量管理的深度耦合，让空气取水在从湿热到干旱的全域气候中稳定、低成本地运行。</p>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card rv">
+        <div class="tech-num" data-i18n="tech.no1">TECH — 01</div>
+        <svg class="tech-icon" viewBox="0 0 56 56" fill="none">
+          <rect x="10" y="10" width="36" height="36" rx="2" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="20" cy="20" r="3" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="36" cy="20" r="3" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="20" cy="36" r="3" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="36" cy="36" r="3" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M23 20h10M20 23v10M36 23v10M23 36h10" stroke="currentColor" stroke-width="1.1"/>
+        </svg>
+        <h3 data-i18n="t1.h">超级海绵吸水材料</h3>
+        <h4 data-i18n="t1.h4">Super Sponge Sorbent</h4>
+        <p data-i18n="t1.p">自研多种超级吸水材料，在低至 10%RH 的干燥空气中仍保持高吸水量，夜间吸附、日间释水，让沙漠与高原也能稳定产水。</p>
+        <div class="tech-tags" data-i18n="t1.tags"><span>10%RH 可用</span><span>循环吸脱附</span></div>
+      </div>
+      <div class="tech-card rv rv-d1">
+        <div class="tech-num" data-i18n="tech.no2">TECH — 02</div>
+        <svg class="tech-icon" viewBox="0 0 56 56" fill="none">
+          <path d="M14 8v40M42 8v40M14 16h28M14 40h28" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M22 24c2 3 10 3 12 0M22 32c2-3 10-3 12 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <h3 data-i18n="t2.h">冷热交换 e-Transfer 技术</h3>
+        <h4 data-i18n="t2.h4">Breathing Thermal Management</h4>
+        <p data-i18n="t2.p">独创呼吸型热管理系统，呵护每一分能源，单位能耗较传统方案降低 40% 以上，产水成本已低于瓶装水。</p>
+        <div class="tech-tags" data-i18n="t2.tags"><span>呼吸型热管理</span><span>-40% 能耗</span></div>
+      </div>
+      <div class="tech-card rv rv-d2">
+        <div class="tech-num" data-i18n="tech.no3">TECH — 03</div>
+        <svg class="tech-icon" viewBox="0 0 56 56" fill="none">
+          <circle cx="28" cy="28" r="20" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M28 16v10l8 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 28h6M42 28h6M28 8v6M28 42v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <h3 data-i18n="t3.h">super supply 能量系统</h3>
+        <h4 data-i18n="t3.h4">Off-Grid Energy Supply</h4>
+        <p data-i18n="t3.p">光伏、热能或储能系统完美结合，实现完全离网的空气制水，让没有电网与水源的地方也能拥有全天候安全饮用水。</p>
+        <div class="tech-tags" data-i18n="t3.tags"><span>光伏</span><span>热能</span><span>储能</span><span>完全离网</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 板块5 · 联系我们 ================= -->
+<section class="sec contact" id="contact">
+  <div class="container">
+    <div class="sec-head rv">
+      <div class="sec-no">05 / CONTACT</div>
+      <h2 class="sec-title" data-i18n="ct.title">与 CatMore 一起，<br>开启空气取水的<em>未来</em>。</h2>
+      <p class="sec-lead" data-i18n="ct.lead">无论您是渠道伙伴、行业客户还是科研机构，欢迎留下您的信息，我们将诚挚为您服务。</p>
+    </div>
+    <div class="contact-grid">
+      <div class="c-info rv">
+        <h3 data-i18n="ct.h3">把您的需求告诉我们，<br>剩下的交给<em>空气</em>。</h3>
+        <p data-i18n="ct.intro">从家庭饮水到干旱区离网供水，从应急救灾到工业补给——告诉我们您的场景，CatMore 团队将为您定制最优的空气取水方案。</p>
+
+        <!-- 排序：邮箱 → 电话 → 地址 -->
+        <div class="c-item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="m3 7 9 6 9-6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <div><b data-i18n="ct.mail">电子邮箱</b><span>info@catmore.com.cn</span></div>
+        </div>
+        <div class="c-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <div><b data-i18n="ct.tel">联系电话</b><span class="ltr-isolate">+86 15711327837</span>（<span data-i18n="ct.teltime">周一至周五 9:00 – 18:00</span>）</span></div>
+        </div>
+        <div class="c-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          <div><b data-i18n="ct.addr">公司地址</b><span data-i18n="ct.addrv">北京（研发中心）+ 广州（制造中心）</span></div>
+        </div>
+      </div>
+
+      <form class="c-form rv rv-d1" id="contactForm" novalidate>
+        <div id="formFields">
+          <div class="f-row">
+            <div class="f-field" data-req>
+              <label data-i18n="f.name">姓名 *</label>
+              <input type="text" name="name" data-i18n-ph="f.name.ph" placeholder="您的姓名">
+              <div class="f-hint" data-i18n="f.name.err">请填写您的姓名</div>
+            </div>
+            <div class="f-field">
+              <label data-i18n="f.co">公司</label>
+              <input type="text" name="company" data-i18n-ph="f.co.ph" placeholder="您所在的公司或机构">
+            </div>
+          </div>
+          <div class="f-field" data-req data-type="email">
+            <label data-i18n="f.mail">邮箱 *</label>
+            <input type="email" name="email" data-i18n-ph="f.mail.ph" placeholder="name@example.com">
+            <div class="f-hint" data-i18n="f.mail.err">请填写有效的邮箱地址</div>
+          </div>
+          <div class="f-field" data-req>
+            <label data-i18n="f.msg">留言 *</label>
+            <textarea name="message" rows="4" data-i18n-ph="f.msg.ph" placeholder="请描述您的需求或合作意向…"></textarea>
+            <div class="f-hint" data-i18n="f.msg.err">请填写留言内容</div>
+          </div>
+          <button type="submit" class="btn btn-solid f-submit"><span data-i18n="f.send">发送留言</span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 12h15m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div class="f-ok" id="formOk">
+          <div class="ok-ring">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h4 data-i18n="f.ok">留言已发送</h4>
+          <p data-i18n="f.okp">感谢您的信任，CatMore 团队将尽快与您联系。<br>如需即时沟通，请致电 <span class="ltr-isolate">+86 15711327837</span>。</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="container">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img src="catmore-logo-light.png" alt="CatMore">
+      </div>
+      <div class="foot-links">
+        <a href="#home" data-i18n="nav.home">首页</a>
+        <a href="#scenes" data-i18n="nav.scenes">应用场景</a>
+        <a href="#about" data-i18n="nav.about">关于我们</a>
+        <a href="#tech" data-i18n="nav.tech">核心技术</a>
+        <a href="#contact" data-i18n="nav.contact">联系我们</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span data-i18n="ft.copy">© CatMore Technology Co., Ltd. 保留所有权利</span>
+      <span><span data-i18n="ft.slogan">承天上水，哲润世界</span> · <span data-i18n="foot.license">沪ICP备XXXXXXXX号</span></span>
+    </div>
+  </div>
+</footer>
+
+<!-- video modal -->
+<div class="v-modal" id="vModal">
+  <div class="v-box">
+    <div class="v-frame" id="vFrame"></div>
+    <button class="v-close" id="vClose" data-i18n="v.close">关闭 CLOSE</button>
+  </div>
+</div>
+
+<button class="top-btn" id="topBtn" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 19V5m0 0-6 6m6-6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<script>
+/* ================= 配置区：把品牌视频链接粘贴到下面 ================= */
+const VIDEO_URL = "https://player.bilibili.com/player.html?bvid=BV1jWaf6CEVK"; // 支持 YouTube / B站 / Vimeo 等 embed 链接
+
+/* ================= 多语言字典 ================= */
+const I18N = {
+zh: {
+  "brand.tag":"承天上水 · 哲润世界",
+  "nav.home":"首页","nav.scenes":"应用场景","nav.about":"关于我们","nav.tech":"核心技术","nav.contact":"联系我们","nav.cta":"预约演示",
+  "hero.h1":"从空气中，<em>创造水</em>","hero.motto":"承天上水，哲润世界",
+  "hero.sub":"全球约 <b>60% 以上</b>人口面临缺水，CatMore 自研<b>超级海绵材料</b>、<b>热交换 e-Transfer 技术</b>、<b>super supply 能量管理系统</b>三大技术路径，把空气中看不见的水气变成全天候安全饮用水。",
+  "hero.btn1":"了解核心技术","hero.btn2":"联系我们",
+  "stat1":"全球人口面临缺水","stat1.u":"%+","stat2":"大气「隐形水库」","stat2.u":"万亿m³","stat3":"极限干燥工况仍可产水","stat4":"单位能耗较传统方案降低","stat4.u":"%+",
+  "mq":"全天候 All Climate <em>◆</em> 离网 Off Grid <em>◆</em> 直饮水 Direct Drinking Water <em>◆</em> 零碳排 Zero CO2 Emission <em>◆</em> 超级海绵材料 Super Sponge Material <em>◆</em> 热交换技术 e-Transfer <em>◆</em> 能量管理 energy super supply <em>◆</em>",
+  "scenes.title":"水可以出现在，<br>任何<em>需要它的地方</em>。","scenes.lead":"从都市家庭到荒漠戈壁，从海岛哨所到救灾现场——CatMore 让净水突破地理边界。",
+  "s1.h":"家庭与办公","s1.p":"免水源、全净水，全天提供生活净水。",
+  "s2.h":"应急与救灾","s2.p":"灾害中断供水时快速部署移动制水单元，为救援现场提供全天候安全饮水。",
+  "s3.h":"海岛与边防","s3.p":"告别海运淡水高成本与不确定性，super supply 能量系统支持完全离网运行。",
+  "s4.h":"农业与工业","s4.p":"为干旱区灌溉与工业用水提供分布式补充水源，助力水资源高效利用。",
+  "about.title":"把空气变成水，<br>把不可能变成<em>日常</em>。","about.lead":"CatMore 是一家专注于干旱离网供水、助力水资源高效利用的科技公司——把空气中看不见的水蒸气，变成全天候安全饮用水。",
+  "about.big":"地球上约 <b>13.9 万亿立方米</b> 的水以气态悬浮于大气之中，大气是地球上最大的<b>「隐形水库」</b>。我们要做的，是将其取出，进行<b>「高效配置」</b>。",
+  "about.video":"观看 CatMore 离网制水",
+  "about.p1":"从实验室的第一克水，到千家万户与应急现场的第一杯水，CatMore 正以材料科学、热科学与精密制造的交叉创新，重新定义「水的来源」。",
+  "about.p2":"CatMore 是由国际顶尖科技团队孵化的硬科技公司，专注空气取水（Atmospheric Water Harvesting）技术的产业化。我们首次完整提出覆盖高温高湿、中温低湿、高温干旱等全域气候的技术解决方案。",
+  "tech.title":"三大核心技术，<br>重新定义<em style=\"color:var(--aqua)\">水的来源</em>。","tech.lead":"材料、热科学与能量管理的深度耦合，让空气取水在从湿热到干旱的全域气候中稳定、低成本地运行。",
+  "t1.h":"超级海绵吸水材料","t1.p":"自研多种超级吸水材料，在低至 10%RH 的干燥空气中仍保持高吸水量，夜间吸附、日间释水，让沙漠与高原也能稳定产水。","t1.tags":"<span>10%RH 可用</span><span>循环吸脱附</span>",
+  "t2.h":"冷热交换 e-Transfer 技术","t2.p":"独创呼吸型热管理系统，呵护每一分能源，单位能耗较传统方案降低 40% 以上，产水成本已低于瓶装水。","t2.tags":"<span>呼吸型热管理</span><span>-40% 能耗</span>",
+  "t3.h":"super supply 能量系统","t3.p":"光伏、热能或储能系统完美结合，实现完全离网的空气制水，让没有电网与水源的地方也能拥有全天候安全饮用水。","t3.tags":"<span>光伏</span><span>热能</span><span>储能</span><span>完全离网</span>",
+  "ct.title":"与 CatMore 一起，<br>开启空气取水的<em>未来</em>。","ct.lead":"无论您是渠道伙伴、行业客户还是科研机构，欢迎留下您的信息，我们将诚挚为您服务。",
+  "ct.h3":"把您的需求告诉我们，<br>剩下的交给<em>空气</em>。","ct.intro":"从家庭饮水到干旱区离网供水，从应急救灾到工业补给——告诉我们您的场景，CatMore 团队将为您定制最优的空气取水方案。",
+  "ct.mail":"电子邮箱","ct.tel":"联系电话","ct.teltime":"周一至周五 9:00 – 18:00","ct.addr":"公司地址","ct.addrv":"北京（研发中心）+ 广州（制造中心）",
+  "f.name":"姓名 *","f.name.ph":"您的姓名","f.name.err":"请填写您的姓名","f.co":"公司","f.co.ph":"您所在的公司或机构",
+  "f.mail":"邮箱 *","f.mail.ph":"name@example.com","f.mail.err":"请填写有效的邮箱地址",
+  "f.msg":"留言 *","f.msg.ph":"请描述您的需求或合作意向…","f.msg.err":"请填写留言内容","f.send":"发送留言",
+  "f.ok":"留言已发送","f.okp":"感谢您的信任，CatMore 团队将尽快与您联系。<br>如需即时沟通，请致电 <span class='ltr-isolate'>+86 15711327837</span>。",
+  "ft.copy":"© CatMore Technology Co., Ltd. 保留所有权利","ft.slogan":"承天上水，哲润世界",
+  "v.empty":"视频链接已配置，点击播放卡片即可观看","v.close":"关闭 CLOSE","t1.h4":"超级海绵吸水材料","t2.h4":"冷热交换技术","t3.h4":"超能供电系统","nav.home_en":"HOME","nav.scenes_en":"SCENES","nav.about_en":"ABOUT","nav.tech_en":"TECH","nav.contact_en":"CONTACT","sig.text":"MAKE EVERY AIR BREATHABLE WATER",
+"sec.scenarios_no":"应用场景","sec.tech_no":"核心技术",
+  "scene.no1":"A—01","scene.no2":"A—02","scene.no3":"A—03","scene.no4":"A—04",
+  "tech.no1":"TECH — 01","tech.no2":"TECH — 02","tech.no3":"TECH — 03",
+  "foot.license":"<span data-i18n='foot.license'>沪ICP备XXXXXXXX号</span>"
+},
+en: {
+  "brand.tag":"Meet Freshwater, Share with World",
+  "nav.home":"Home","nav.scenes":"Applications","nav.about":"About Us","nav.tech":"Core Technology","nav.contact":"Contact Us","nav.cta":"Book a Demo",
+  "hero.h1":"Meet Freshwater,<br>Share with World","hero.motto":"Making Water <em>from Air</em>",
+  "hero.sub":"Over <b>60%</b> of the world’s population faces water scarcity. With three self-developed technology paths — <b>super sponge sorbent</b>, <b>thermal-exchange e-Transfer</b>, and the <b>super supply energy management system</b> — CatMore turns invisible moisture in the air into safe, all-weather drinking water.",
+  "hero.btn1":"Explore Our Technology","hero.btn2":"Contact Us",
+  "stat1":"of the global population faces water scarcity","stat1.u":"%+","stat2":"The atmosphere — an “invisible reservoir”","stat2.u":"trillion m³","stat3":"Extremely dry conditions — still producing water","stat4":"Lower energy consumption vs. conventional solutions","stat4.u":"%+",
+  "mq":"All-Climate <em>◆</em> Off-Grid <em>◆</em> Direct Drinking Water <em>◆</em> Zero-CO₂ Emission <em>◆</em> Super Sponge Material <em>◆</em> e-Transfer Thermal Exchange <em>◆</em> super supply Energy Management <em>◆</em>",
+  "scenes.title":"Water can appear<br><em>wherever it is needed</em>.","scenes.lead":"From urban homes to desert frontiers, from island outposts to disaster-relief sites — CatMore brings clean water beyond geographical boundaries.",
+  "s1.h":"Homes & Offices","s1.p":"No water source or plumbing required — clean water for daily life, around the clock.",
+  "s2.h":"Emergency & Relief","s2.p":"Rapidly deploy mobile water-generation units when disasters cut off supply, providing safe drinking water at relief sites around the clock.",
+  "s3.h":"Islands & Mining Areas","s3.p":"Say goodbye to the high cost and uncertainty of shipped-in fresh water — the super supply energy system supports fully off-grid operation.",
+  "s4.h":"Agriculture & Industry","s4.p":"Distributed supplemental water for irrigation in arid regions and industrial use, supporting efficient water-resource utilization.",
+  "about.title":"Turning air into water,<br>enjoy <em>water fresh life</em>.","about.lead":"CatMore is a technology company focused on off-grid water supply in arid regions and efficient water utilization — turning invisible water vapor in the air into safe, all-weather drinking water.",
+  "about.big":"About <b>13.9 trillion cubic meters</b> of water floats in the atmosphere as vapor — the largest <b>“invisible reservoir”</b> on Earth. Our mission is to extract it and put it to <b>“efficient use.”</b>",
+  "about.video":"Watch CatMore Off-Grid Water Production",
+  "about.p1":"From the first gram of water in the lab to the first cup of water for households and emergency sites, CatMore is redefining “where water comes from” through the convergence of materials science, thermal science, and precision manufacturing.",
+  "about.p2":"CatMore is a hard-tech company incubated by a world-class international team, dedicated to the industrialization of Atmospheric Water Harvesting (AWH). For the first time, we have proposed a complete technical solution covering all climate zones — hot & humid, mild & dry, and hot & arid.",
+  "tech.title":"Three Core Technologies,<br>Redefining <em style=\"color:var(--aqua)\">Where Water Comes From</em>.","tech.lead":"The deep coupling of materials, thermal science, and energy management enables stable, low-cost air-to-water production across all climates, from humid to arid.",
+  "t1.h":"Super Sponge Sorbent","t1.p":"Multiple self-developed super-absorbent materials retain high water uptake even in dry air as low as 10% RH — adsorbing at night and releasing water by day, enabling stable production in deserts and on plateaus.","t1.tags":"<span>Works at 10% RH</span><span>Cyclic adsorption/desorption</span>",
+  "t2.h":"e-Transfer Thermal Exchange","t2.p":"A proprietary breathing-type thermal management system that cherishes every bit of energy — cutting energy consumption per unit by over 40% versus conventional solutions, with water production costs now below bottled water.","t2.tags":"<span>Breathing thermal management</span><span>-40% energy</span>",
+  "t3.h":"super supply Energy System","t3.p":"Perfectly integrated photovoltaic, thermal, or energy-storage systems enable fully off-grid air-to-water production — bringing safe, all-weather drinking water to places without power grids or water sources.","t3.tags":"<span>Solar PV</span><span>Thermal</span><span>Storage</span><span>Fully off-grid</span>",
+  "ct.title":"Meet CatMore,<br>thus <em>Meet Freshwater</em>.","ct.lead":"Whether you are a channel partner, industry customer, or research institution, leave us your information — we will be glad to serve you.",
+  "ct.h3":"Tell us your needs —<br>and leave the rest to <em>the More</em>.","ct.intro":"From household drinking water to off-grid supply in arid regions, from emergency relief to industrial replenishment — tell us your scenario, and the CatMore team will tailor the optimal air-to-water solution for you.",
+  "ct.mail":"Email","ct.tel":"Phone","ct.teltime":"Mon–Fri, 9:00 – 18:00","ct.addr":"Address","ct.addrv":"Beijing (R&D Center) + Guangzhou (Manufacturing Center)",
+  "f.name":"Name *","f.name.ph":"Your name","f.name.err":"Please enter your name","f.co":"Company","f.co.ph":"Your company or organization",
+  "f.mail":"Email *","f.mail.ph":"name@example.com","f.mail.err":"Please enter a valid email address",
+  "f.msg":"Message *","f.msg.ph":"Describe your needs or partnership intentions…","f.msg.err":"Please enter your message","f.send":"Send Message",
+  "f.ok":"Message Sent","f.okp":"Thank you for your trust. The CatMore team will contact you shortly.<br>For immediate assistance, please call <span class='ltr-isolate'>+86 15711327837</span>.",
+  "ft.copy":"© CatMore Technology Co., Ltd. All rights reserved","ft.slogan":"Meet Freshwater, Share with World",
+  "v.empty":"Video link configured. Click the play card to watch.","v.close":"Close","t1.h4":"Super Sponge Sorbent","t2.h4":"Breathing Thermal Management","t3.h4":"Off-Grid Energy Supply","nav.home_en":"HOME","nav.scenes_en":"SCENES","nav.about_en":"ABOUT","nav.tech_en":"TECH","nav.contact_en":"CONTACT","sig.text":"MAKE EVERY AIR BREATHABLE WATER",
+  "sec.scenarios_no":"Scenarios","sec.tech_no":"Technology",
+  "scene.no1":"A—01","scene.no2":"A—02","scene.no3":"A—03","scene.no4":"A—04",
+  "tech.no1":"TECH — 01","tech.no2":"TECH — 02","tech.no3":"TECH — 03",
+  "foot.license":"Shanghai ICP License No.XXXXXXXX"
+}
+,
+ar: {
+  "brand.tag":"كاتمور · صُنع الماء من الهواء",
+  "nav.home":"الرئيسية","nav.scenes":"مجالات التطبيق","nav.about":"من نحن","nav.tech":"التقنية الأساسية","nav.contact":"اتصل بنا","nav.cta":"حجز عرض تجريبي",
+  "hero.h1":"من الهواء،<em>صُنع الماء</em>","hero.motto":"صُنع الماء من الهواء",
+  "hero.sub":"يواجه نحو <b>60%+</b> من سكان العالم شح المياه، خاصة في المناطق الصحراوية والداخلية. وبفضل ثلاث مسارات تقنية ذاتية التطوير — <b>مادة الإسفنج الفائق الامتصاص</b>، و<b>تقنية التبادل الحراري e-Transfer</b>، ونظام إدارة الطاقة <b>super supply</b> — تحوّل كاتمور الرطوبة غير المرئية في الهواء إلى ماء شرب آمن على مدار الساعة، وتدعم الاحتياطي الاستراتيجي للمياه.",
+  "hero.btn1":"استكشف تقنيتنا","hero.btn2":"اتصل بنا",
+  "stat1":"من سكان العالم يواجهون شح المياه","stat1.u":"%+","stat2":"الغلاف الجوي — خزان ماء \\u201cغير مرئي\\u201d","stat2.u":"تريليون م³","stat3":"في أقسى ظروف الجفاف نستمر بإنتاج الماء","stat4":"انخفاض استهلاك الطاقة مقارنة بالحلول التقليدية","stat4.u":"%+",
+  "mq":"على مدار الساعة All Climate <em>◆</em> خارج الشبكة Off Grid <em>◆</em> ماء شرب مباشر Direct Drinking Water <em>◆</em> صافي انبعاثات صفرية Zero CO2 Emission <em>◆</em> مادة الإسفنج الفائق Super Sponge Material <em>◆</em> التبادل الحراري e-Transfer <em>◆</em> إدارة الطاقة super supply <em>◆</em>",
+  "scenes.title":"الماء يمكن أن يظهر<br>حيثما <em>يُحتاج إليه</em>.","scenes.lead":"من المنازل الحضرية إلى أعماق الصحراء، من معاقل الجزر إلى مواقع الكوارث — كاتمور تنقل المياه النظيفة بما يتجاوز الحدود الجغرافية.",
+  "s1.h":"المنازل والمكاتب","s1.p":"بدون حاجة لمصدر مياه أو شبكات — ماء نقي للحياة اليومية، على مدار الساعة.",
+  "s2.h":"الطوارئ والإغاثة","s2.p":"نشر سريع لوحدات إنتاج الماء المتنقلة عند انقطاع الإمدادات بسبب الكوارث، وتوفير ماء شرب آمن في مواقع الإغاثة والصحراء على مدار الساعة، دعماً للجاهزية الاستراتيجية.",
+  "s3.h":"الجزر والمناطق النائية","s3.p":"ودّع التكلفة العالية وعدم اليقين المرتبط بنقل المياه العذبة — يدعم نظام super supply التشغيل الكامل خارج الشبكة في المناطق النائية والصحراوية.",
+  "s4.h":"الزراعة والصناعة","s4.p":"مصدر ماء تكميلي موزع للري في المناطق القاحلة والاستخدام الصناعي، ودعم الاستخدام الفعال للموارد المائية.",
+  "about.title":"تحويل الهواء إلى ماء،<br>جعل المستحيل <em>واقعاً يومياً</em>.","about.lead":"كاتمور شركة تقنية متخصصة في توفير حلول المياه المستدامة في المناطق الصحراوية، ولا سيما المناطق الصحراوية الداخلية التي تغيب فيها شبكات الكهرباء والبنية التحتية للمياه. وبفضل تقنية استخراج الرطوبة من الهواء وتحويلها إلى مياه صالحة للشرب، تُسهم منتجاتنا في دعم الاحتياطي الاستراتيجي الوطني للمياه وتعزيز القدرة على الاستجابة في حالات الطوارئ.",
+  "about.big":"نحو <b>13.9 تريليون متر مكعب</b> من الماء يطفو في الغلاف الجوي كبخار — وهو أكبر <b>\\u201cخزان مائي غير مرئي\\u201d</b> على الأرض. مهمتنا هي استخراجه ووضعها في <b>\\u201cاستخدام فعال\\u201d</b>.",
+  "about.video":"شاهد تقنية كاتمور لإنتاج المياه في الصحراء",
+  "about.p1":"من المختبر إلى المنازل ومواقع الطوارئ، تعمل كاتمور على إعادة تعريف \\u201cمصدر الماء\\u201d من خلال الابتكار المشترك بين علوم المواد، والديناميكا الحرارية، والتصنيع الدقيق.",
+  "about.p2":"كاتمور شركة تقنية متخصصة في مجال التقنيات الصلبة، نشأت عن فريق دولي متميز، وتركز على تحويل تقنية استخراج الماء من الهواء (Atmospheric Water Harvesting) إلى واقع صناعي. نقدم لأول مرة حلاً تقنياً شاملاً يغطي جميع الأنماط المناخية — من الحار الرطب إلى الجاف والحار.",
+  "tech.title":"ثلاث تقنيات أساسية،<br>إعادة تعريف <em style=\"color:var(--aqua)\">مصدر الماء</em>.","tech.lead":"الترابط العميق بين علوم المواد، والديناميكا الحرارية، وإدارة الطاقة يتيح إنتاج الماء من الهواء بشكل مستقر وبكلفة منخفضة في جميع الظروف المناخية، من الرطب إلى الجاف.",
+  "t1.h":"مادة الإسفنج الفائق الامتصاص","t1.p":"مواد ماصة فائقة التطوير ذاتي تحتفظ بامتصاص عالي للماء حتى في الهواء الجاف بنسبة رطوبة 10% — الامتصاص ليلاً وإطلاق الماء نهاراً، مما يتيح الإنتاج المستقر في الصحاري والهضاب.","t1.tags":"<span>يعمل عند 10% RH</span><span>امتصاص/إطلاق دوري</span>",
+  "t2.h":"التبادل الحراري e-Transfer","t2.p":"نظام إدارة حرارية تنفسية مبتكر يحرص على كل وحدة طاقة — يخفض استهلاك الطاقة للوحدة بأكثر من 40% مقارنة بالحلول التقليدية، وتكلفة إنتاج الماء أصبحت أقل من الماء المعبأ.","t2.tags":"<span>إدارة حرارية تنفسية</span><span>-40% طاقة</span>",
+  "t3.h":"نظام طاقة super supply","t3.p":"تكامل مثالي لأنظمة الطاقة الشمسية أو الحرارية أو تخزين الطاقة يتيح إنتاج الماء من الهواء بشكل كامل خارج الشبكة — إيصال ماء شرب آمن على مدار الساعة للأماكن التي تفتقر إلى شبكات الكهرباء والمياه.","t3.tags":"<span>طاقة شمسية</span><span>حرارية</span><span>تخزين</span><span>خارج الشبكة تماماً</span>",
+  "ct.title":"تعرف على كاتمور،<br>وبعدها <em>تعرف على الماء النقي</em>.","ct.lead":"سواء كنت شريكاً توزيعياً أو عميلاً صناعياً أو مؤسسة بحثية، اترك لنا معلوماتك — سنسعد بخدمتك.",
+  "ct.h3":"أخبرنا باحتياجاتك —<br>وكل الباقي دعّه <em>للهواء</em>.","ct.intro":"من ماء الشرب المنزلي إلى التوريد خارج الشبكة في المناطق القاحلة، من الإغاثة الطارئة إلى التعويض الصناعي — أخبرنا بسيناريوك، وفريق كاتمور سيقوم بتصميم الحل الأمثل لاستخراج الماء من الهواء لك.",
+  "ct.mail":"البريد الإلكتروني","ct.tel":"الهاتف","ct.teltime":"الاثنين – الجمعة، 9:00 – 18:00","ct.addr":"العنوان","ct.addrv":"بيجين (مركز البحث والتطوير) + قوانغتشو (مركز التصنيع)",
+  "f.name":"الاسم *","f.name.ph":"اسمك","f.name.err":"الرجاء إدخال اسمك","f.co":"الشركة","f.co.ph":"شركتك أو مؤسستك",
+  "f.mail":"البريد الإلكتروني *","f.mail.ph":"name@example.com","f.mail.err":"الرجاء إدخال بريد إلكتروني صالح",
+  "f.msg":"الرسالة *","f.msg.ph":"صف احتياجاتك أو نواياك الشراكة…","f.msg.err":"الرجاء إدخال رسالتك","f.send":"إرسال الرسالة",
+  "f.ok":"تم إرسال الرسالة","f.okp":"شكراً لثقتك. سيتواصل معك فريق كاتمور قريباً.<br>للحصول على مساعدة فورية، يرجى الاتصال على <span class='ltr-isolate'>+86 15711327837</span>.",
+  "ft.copy":"© 2026 كاتمور. جميع الحقوق محفوظة","ft.slogan":"تعرف على الماء النقي، شاركه مع العالم",
+  "v.empty":"تم تكوين رابط الفيديو. انقر على بطاقة التشغيل للمشاهدة.","v.close":"إغلاق","t1.h4":"مادة الإسفنج الفائق الامتصاص","t2.h4":"التبادل الحراري","t3.h4":"نظام طاقة خارج الشبكة","nav.home_en":"الرئيسية","nav.scenes_en":"المجالات","nav.about_en":"من نحن","nav.tech_en":"التقنية","nav.contact_en":"اتصل بنا","sig.text":"اجعل كل هواء ماءً صالحاً للشرب",
+  "sec.scenarios_no":"المجالات","sec.tech_no":"التقنية",
+  "scene.no1":"A—01","scene.no2":"A—02","scene.no3":"A—03","scene.no4":"A—04",
+  "tech.no1":"TECH — 01","tech.no2":"TECH — 02","tech.no3":"TECH — 03",
+  "foot.license":"ترخيص آي بي لمقاطعة شنغهايXXXXXXXX"
+}
+};
+
+/* ---------- 语言切换 ---------- */
+const mq = document.getElementById('mqTrack');
+function renderMarquee(lang){
+  const s = `<span>${I18N[lang]["mq"]}</span>`;
+  mq.innerHTML = s + s; // 两份内容，保证无缝滚动
+}
+function setLang(lang){
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : (lang === 'en' ? 'en' : 'ar');
+  if (lang === 'ar') { document.documentElement.dir = 'rtl'; } else { document.documentElement.dir = 'ltr'; }
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n;
+    if (I18N[lang] && I18N[lang][k] !== undefined) el.innerHTML = I18N[lang][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const k = el.dataset.i18nPh;
+    if (I18N[lang] && I18N[lang][k] !== undefined) el.placeholder = I18N[lang][k];
+  });
+  renderMarquee(lang);
+  if (!VIDEO_URL && I18N[lang]) vFrame.innerHTML = I18N[lang]["v.empty"];
+  document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  try { localStorage.setItem('catmore_lang', lang); } catch(e){}
+}
+let LANG = 'zh';
+try { LANG = localStorage.getItem('catmore_lang') || 'zh'; } catch(e){}
+document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+
+/* ---------- Nav ---------- */
+const nav = document.getElementById('nav');
+const topBtn = document.getElementById('topBtn');
+addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', scrollY > 40);
+  topBtn.classList.toggle('show', scrollY > 700);
+}, {passive:true});
+topBtn.onclick = () => scrollTo({top:0, behavior:'smooth'});
+
+/* scrollspy */
+const spy = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  document.querySelectorAll('#navLinks a').forEach(a =>
+    a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+}), {rootMargin:'-40% 0px -55% 0px'});
+document.querySelectorAll('section[id], header[id]').forEach(s => spy.observe(s));
+
+/* mobile menu */
+const burger = document.getElementById('burger');
+const mMenu = document.getElementById('mMenu');
+burger.onclick = () => mMenu.classList.toggle('open');
+mMenu.querySelectorAll('a').forEach(a => a.onclick = () => mMenu.classList.remove('open'));
+
+/* ---------- Reveal ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.15});
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+/* ---------- Counters ---------- */
+const cio = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const el = e.target, to = +el.dataset.to, dec = +(el.dataset.dec || 0);
+  const t0 = performance.now(), dur = 1600;
+  (function tick(t){
+    const p = Math.min((t - t0)/dur, 1), ease = 1 - Math.pow(1-p, 3), v = to * ease;
+    el.textContent = dec ? v.toFixed(dec) : Math.round(v).toLocaleString();
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+  cio.unobserve(el);
+}), {threshold:.6});
+document.querySelectorAll('.count').forEach(el => cio.observe(el));
+
+/* ---------- Video modal ---------- */
+const vModal = document.getElementById('vModal');
+const vFrame = document.getElementById('vFrame');
+document.getElementById('videoCard').onclick = () => {
+  if (VIDEO_URL) {
+    vFrame.innerHTML = `<iframe src="${VIDEO_URL}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  }
+  vModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+function closeV(){
+  vModal.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { if (!VIDEO_URL) vFrame.innerHTML = I18N[LANG]["v.empty"]; }, 400);
+}
+document.getElementById('vClose').onclick = closeV;
+vModal.onclick = e => { if (e.target === vModal) closeV(); };
+addEventListener('keydown', e => { if (e.key === 'Escape') closeV(); });
+
+/* ---------- Contact form ---------- */
+const form = document.getElementById('contactForm');
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  let ok = true;
+  form.querySelectorAll('.f-field[data-req]').forEach(f => {
+    const input = f.querySelector('input,textarea');
+    let valid = input.value.trim().length > 0;
+    if (valid && f.dataset.type === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+    f.classList.toggle('err', !valid);
+    if (!valid) ok = false;
+  });
+  if (!ok) return;
+  /* TODO: 接入您的后端接口，例如 fetch('/api/contact', {method:'POST', body:new FormData(form)}) */
+  document.getElementById('formFields').style.display = 'none';
+  document.getElementById('formOk').classList.add('show');
+});
+form.querySelectorAll('input,textarea').forEach(i =>
+  i.addEventListener('input', () => i.closest('.f-field').classList.remove('err')));
+
+/* ---------- Hero canvas：水汽环绕 ---------- */
+const cv = document.getElementById('heroCanvas'), ctx = cv.getContext('2d');
+let W, H, t = 0;
+const vapor = [];
+function resize(){
+  W = cv.width = cv.offsetWidth * devicePixelRatio;
+  H = cv.height = cv.offsetHeight * devicePixelRatio;
+}
+resize(); addEventListener('resize', resize);
+const CX = () => W / 2, CY = () => H * 0.40;
+for (let i = 0; i < 130; i++) {
+  vapor.push({
+    a: Math.random() * Math.PI * 2,
+    r: 90 + Math.random() * 420,
+    sp: (Math.random() * .0016 + .0006) * (Math.random() > .5 ? 1 : -1),
+    out: Math.random() * .12 + .03,
+    size: Math.random() * 26 + 8,
+    o: Math.random() * .5 + .12,
+    c: Math.random() > .55 ? '120,180,255' : (Math.random() > .4 ? '43,197,200' : '200,225,255'),
+    wob: Math.random() * Math.PI * 2
+  });
+}
+(function draw(){
+  ctx.clearRect(0, 0, W, H);
+  t += .016;
+  const cx = CX(), cy = CY(), dpr = devicePixelRatio;
+  for (let l = 0; l < 2; l++){
+    ctx.beginPath();
+    const yBase = H * (0.86 + l * 0.06);
+    for (let x = 0; x <= W; x += 10){
+      const y = yBase + Math.sin(x * .0012 + t * (0.8 + l * .3)) * (14 + l * 10) * dpr;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(78,155,255,${.08 - l * .03})`;
+    ctx.lineWidth = 1.2 * dpr;
+    ctx.stroke();
+  }
+  vapor.forEach(p => {
+    p.a += p.sp; p.r += p.out; p.wob += .02;
+    if (p.r > Math.min(W, H) * .52) { p.r = 90 + Math.random() * 60; p.o = Math.random() * .5 + .12; p.a = Math.random() * Math.PI * 2; }
+    const fade = Math.max(0, 1 - (p.r - 90) / (Math.min(W, H) * .45));
+    const x = cx + Math.cos(p.a) * p.r * dpr + Math.sin(p.wob) * 10 * dpr;
+    const y = cy + Math.sin(p.a) * p.r * .62 * dpr + Math.cos(p.wob * .8) * 8 * dpr;
+    const rad = p.size * dpr * (0.6 + fade * .6);
+    const g = ctx.createRadialGradient(x, y, 0, x, y, rad);
+    g.addColorStop(0, `rgba(${p.c},${p.o * fade * .5})`);
+    g.addColorStop(1, `rgba(${p.c},0)`);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x, y, rad, 0, Math.PI * 2); ctx.fill();
+  });
+  requestAnimationFrame(draw);
+})();
+
+/* ---------- 初始化语言 ---------- */
+setLang(LANG);
+</script>
+</body>
+</html>
